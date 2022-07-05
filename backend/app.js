@@ -11,6 +11,9 @@ const port = process.env.PORT || 3001;
 //middlewares
 app.use(cors());
 
+//rutas
+app.use('/api', require('./routes'));
+
 app.listen(port, () => (
     console.log(`La app esta lista en http://localhost:${port}`)
 ));
