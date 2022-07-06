@@ -20,14 +20,19 @@ const Product = sequelize.define('product',{
     category: {
         type: DataTypes.INTEGER
     }
+},
+{
+    freezeTableName: true,
+    timestamps: false
 });
 
 Product.findAllData = function () {
     Product.belongsTo(Category,{
-        foreignKey: 'category'
-    })
+        foreignKey: 'category',
+        as: 'Category'
+    });
 
-    return Product.findAll({include:Category})
+    return Product.findAll({include:'Category'})
 };
 
 module.exports = Product;

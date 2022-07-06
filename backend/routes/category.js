@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { getCategory } = require('../controllers/category');
 
-router.get('/', (req, res) => {
-    return res.send({
-        message: 'hola'
-    })
-});
+router.get('/', getCategory);
 
 module.exports = router;

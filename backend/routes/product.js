@@ -1,10 +1,7 @@
 const express = require('express');
 const router = express.Router();
+const { getItems } = require('../controllers/product');
 
-router.get('/', (req, res) => {
-    return res.send({
-        message: 'hola'
-    })
-});
+router.get('/', getItems);
 
 module.exports = router;

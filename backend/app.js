@@ -18,4 +18,4 @@ app.listen(port, () => (
     console.log(`La app esta lista en http://localhost:${port}`)
 ));
 
-//conexionDB();
+conexionDB();
