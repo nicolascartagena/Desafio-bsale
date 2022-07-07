@@ -23,10 +23,10 @@
 <body>
     <!--Encabezado de la tienda (logo, menu, buscador, shopping cart)-->
     <header>
-        <nav class="navbar navbar-expand-lg">
+        <nav class="navbar">
             <div class="container-fluid">
                 <div class="navbar-brand">
-                    <a class="navbar-brand" href="#">Bsale Test</a>
+                    <a class="navbar-brand" href="index.html">Bsale Test</a>
                     <button class="navbar-toggler bordes" type="button" data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
                         <span><i class="fa-solid fa-bars"></i> Menú</span>
@@ -38,34 +38,25 @@
                 <div class="carrito">
                     <i class="fa-solid fa-cart-shopping"></i>
                 </div>
-            </div>
-            <!--Categorias-->
+                <!--Categorias-->
             <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar"
-                aria-labelledby="offcanvasNavbarLabel">
-                <div class="offcanvas-header">
-                    <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Categorias</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-                </div>
-                <div class="offcanvas-body">
-                    <ul id="categorias" class="navbar-nav justify-content-end flex-grow-1 pe-3">
-                    </ul>
-                </div>
+            aria-labelledby="offcanvasNavbarLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Categorías</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
+            <div class="offcanvas-body">
+                <ul id="categorias" class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                </ul>
+            </div>
+        </div>
+            </div>
+            
         </nav>
     </header>
-    <hr />
     <!--Main de la tienda (muestra de productos)-->
     <main>
         <div id="productos" class="content">
-            <div class="card">
-
-                    <div class="card-body">
-                        <h5 class="card-title">Card Title</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Card Subtitle</h6>
-                        <p class="card-text">Some Quick example text to build on the card title and make up</p>
-                        <a href="#" class="card-link"><i class="fa-solid fa-cart-arrow-down"></i></a>
-                    </div>
-            </div>
         </div>
     </main>
     <hr />

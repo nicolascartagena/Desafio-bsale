@@ -1,0 +1,87 @@
+header {
+    background-color: #ff5c1a;
+}
+
+header .navbar-brand {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-left: 15px;
+}
+
+header .navbar-toggler {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-left: 20px;
+}
+
+header .carrito i {
+    color: #fff;
+    font-size: 20px;
+    margin-right: 20px;
+}
+
+header .offcanvas .offcanvas-header {
+    background-color: #ff5c1a;
+    color: #fff;
+}
+
+header .offcanvas .offcanvas-header h5 {
+    font-weight: 25px;
+    margin-left: 10px;
+}
+
+header .offcanvas .offcanvas-body {
+    background-color: #fbfbfd;
+}
+
+header .offcanvas .offcanvas-body .nav-item:hover {
+    background-color: #ff5c1a;
+}
+
+header .offcanvas .offcanvas-body .nav-link {
+    font-size: 17px;
+    font-weight: 600;
+    margin-left: 5px;
+    color: #ff5c1a;
+}
+
+header .offcanvas .offcanvas-body .nav-link:hover {
+    color: #fff;
+}
+
+header.offcanvas .offcanvas-body hr {
+    margin-top: -5px;
+}
+
+main {
+    background-color: #fbfbfd;
+    padding: 0 15px;
+}
+
+main .content {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 40px;
+}
+
+main .content .card {
+    width: 18rem;
+}
+
+main .content .card .card-footer a {
+    float: right;
+    font-size: 20px;
+    color: #FF6B2E;
+}
+
+main .content .card .card-footer a:hover {
+    color: #FC4800;
+}
+
+footer {
+    background-color: #677294;
+}

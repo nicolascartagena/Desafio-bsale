@@ -14,11 +14,17 @@ const cargarProductos = async () => {
             for(let item of data.results) {
                 products += `
                 <div class="card">
-                    <img src='${item.url_image}' class="card-img-top" alt=""/>
                     <div class="card-body">
+                        <img src='${item.url_image}' class="card-img-top" alt="${item.name}"/>
+                    </div>
+                    <div class="card-footer bg-transparent">
                         <h5 class="card-title">${item.name}</h5>
-                        <h6 class="card-subtitle mb-2">$${item.price} <span class="text-muted">${item.discount}</span></h6>
-                        <p class="card-text">${item.Category.name}</p>
+                        <h6 class="card-subtitle mb-2">
+                            $${item.price} ${
+                                item.discount > 0 ? `<span class="text-muted">-${item.discount}%</span>` : ''
+                            }
+                        </h6>
+                        <span class="card-text">${item.Category.name}</span>
                         <a href="#" class="card-link"><i class="fa-solid fa-cart-arrow-down"></i></a>
                     </div>
                 </div>
@@ -36,7 +42,7 @@ const cargarCartegorias = async () => {
             for(let item of data.results) {
                 categoria += `
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="./index.html/${item.name}">${item.name}</a>
+                    <a class="nav-link" aria-current="page" href="./index.html/${item.name}">${item.name}</a>
                 </li>
                 `;
             }
