@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Función para cargar los productos url: /api/product
     cargarProductos();
+
+    document.getElementById('buscador').addEventListener("input", buscadorProducto);
 });
 
 const cargarProductos = async () => {
@@ -50,4 +52,8 @@ const cargarCartegorias = async () => {
             
         })
         .catch(err => console.log(err));
+}
+
+const buscadorProducto = async (e) => {
+    console.log(e.target.value);
 }

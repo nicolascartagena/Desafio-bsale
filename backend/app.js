@@ -10,6 +10,7 @@ const port = process.env.PORT || 3001;
 
 //middlewares
 app.use(cors());
+app.use(express.json());
 
 //rutas
 app.use('/api', require('./routes'));

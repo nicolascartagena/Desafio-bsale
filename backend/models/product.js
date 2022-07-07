@@ -26,12 +26,13 @@ const Product = sequelize.define('product',{
     timestamps: false
 });
 
-Product.findAllData = function () {
-    Product.belongsTo(Category,{
-        foreignKey: 'category',
-        as: 'Category'
-    });
+// Asociación de las tablas
+Product.belongsTo(Category,{
+    foreignKey: 'category',
+    as: 'Category'
+});
 
+Product.findAllData = function () {    
     return Product.findAll({include:'Category'})
 };
 
