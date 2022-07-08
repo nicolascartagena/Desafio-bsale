@@ -36,4 +36,8 @@ Product.findAllData = function () {
     return Product.findAll({include:'Category'})
 };
 
+Product.findAllCondition = function (condition) {
+    return Product.findAll({ include: 'Category', where: condition })
+}
+
 module.exports = Product;
