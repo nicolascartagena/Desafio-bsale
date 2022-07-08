@@ -12,8 +12,9 @@ const cargarProductos = async () => {
     await fetch('http://localhost:3000/api/product')
         .then(response => response.json())
         .then(data => {
-            
+            console.log(data)
             document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count)
         })
         .catch(err => {
             console.log(err);
@@ -85,7 +86,7 @@ const filtrarProductos = async (id) => {
 const mostrarProductos = (data) => {
     let products = '';
     
-    for(let item of data.results) {
+    for(let item of data.results.rows) {
         products += `
             <div class="card">
                 <div class="card-body">
@@ -106,4 +107,38 @@ const mostrarProductos = (data) => {
     }
 
     return products;
+}
+
+const mostrarPaginacion = (count) => {
+    const count_pages = Math.floor(count / 12);
+    pages = `
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+    `;
+    
+    for(let i = 0; i < count_pages; i++) {
+        pages += `
+        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`})" class="page-link">${(i+1)}</button></li>
+        `;
+    }
+
+    pages += `
+        </ul>
+    </nav>
+    `;
+    document.getElementById('paginas').innerHTML = pages;
+}
+
+const seleccionarPagina = async (page) => {
+    await fetch(`http://localhost:3000/api/product/?page=${page}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log(data)
+            document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count)
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Lo sentimos!!! No se pudieron cargar los productos");
+        });
 }

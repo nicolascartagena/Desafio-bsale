@@ -4,14 +4,23 @@ const { Op } = require('sequelize');
 
 const getItems = async (req, res) => {
     try {
-        const results = await Product.findAllData();
+        const page = req.query.page;
+        const {limit, offset} = getPage(page, 12);
+        const results = await Product.findAllData(limit, offset);
         res.json({
-            results
+            results,
+            page
         });
     } catch (e) {
         console.log(e);
         handleHttpError(res,e,500);
     }
+}
+
+const getPage = (page, size) => {
+    const limit = size ? +size : 3;
+    const offset = page ? page * limit : 0;
+    return {limit,offset}
 }
 
 const getItem = async (req, res) => {

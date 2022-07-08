@@ -32,8 +32,11 @@ Product.belongsTo(Category,{
     as: 'Category'
 });
 
-Product.findAllData = function () {    
-    return Product.findAll({include:'Category'})
+Product.findAllData = function (limit, offset) {    
+    return Product.findAndCountAll({
+        limit: limit,
+        offset: offset,
+        include:'Category'})
 };
 
 Product.findAllCondition = function (condition) {
