@@ -8,8 +8,7 @@ const getItems = async (req, res) => {
         const {limit, offset} = getPage(page, 12);
         const results = await Product.findAllData(limit, offset);
         res.json({
-            results,
-            page
+            results
         });
     } catch (e) {
         console.log(e);
