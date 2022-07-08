@@ -9,10 +9,10 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 const cargarProductos = async () => {
-    await fetch('http://localhost:3000/api/product')
+    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product')
         .then(response => response.json())
         .then(data => {
-            console.log(data)
+            limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
             mostrarPaginacion(data.results.count)
         })
@@ -23,7 +23,7 @@ const cargarProductos = async () => {
 }
 
 const cargarCartegorias = async () => {
-    await fetch('http://localhost:3000/api/category')
+    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/category')
         .then(response => response.json())
         .then(data =>{
             let categoria = '';
@@ -50,13 +50,14 @@ const buscadorProducto = async (e) => {
     };
 
 
-    await fetch('http://localhost:3000/api/product', {
+    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {
+            limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
         })
         .catch(err => {
@@ -69,13 +70,14 @@ const filtrarProductos = async (id) => {
         category: id
     };
 
-    await fetch('http://localhost:3000/api/product/filter', {
+    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product/filter', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
         })
         .then(response => response.json())
         .then(data => {
+            limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
         })
         .catch(err => {
@@ -85,25 +87,48 @@ const filtrarProductos = async (id) => {
 
 const mostrarProductos = (data) => {
     let products = '';
-    
-    for(let item of data.results.rows) {
-        products += `
-            <div class="card">
-                <div class="card-body">
-                    <img src='${item.url_image}' class="card-img-top" alt="${item.name}"/>
+    console.log(data)
+    if(data.results.rows) {
+        for(let item of data.results.rows) {
+            products += `
+                <div class="card">
+                    <div class="card-body">
+                        <img src='${item.url_image}' class="card-img-top" alt="${item.name}"/>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <h5 class="card-title">${item.name}</h5>
+                        <h6 class="card-subtitle mb-2">
+                            $${item.price} ${
+                                item.discount > 0 ? `<span class="text-muted">-${item.discount}%</span>` : ''
+                            }
+                        </h6>
+                        <span class="card-text">${item.Category.name}</span>
+                        <a href="#" class="card-link"><i class="fa-solid fa-cart-arrow-down"></i></a>
+                    </div>
                 </div>
-                <div class="card-footer bg-transparent">
-                    <h5 class="card-title">${item.name}</h5>
-                    <h6 class="card-subtitle mb-2">
-                        $${item.price} ${
-                            item.discount > 0 ? `<span class="text-muted">-${item.discount}%</span>` : ''
-                        }
-                    </h6>
-                    <span class="card-text">${item.Category.name}</span>
-                    <a href="#" class="card-link"><i class="fa-solid fa-cart-arrow-down"></i></a>
+            `;
+        }
+    }
+    else {
+        for(let item of data.results) {
+            products += `
+                <div class="card">
+                    <div class="card-body">
+                        <img src='${item.url_image}' class="card-img-top" alt="${item.name}"/>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <h5 class="card-title">${item.name}</h5>
+                        <h6 class="card-subtitle mb-2">
+                            $${item.price} ${
+                                item.discount > 0 ? `<span class="text-muted">-${item.discount}%</span>` : ''
+                            }
+                        </h6>
+                        <span class="card-text">${item.Category.name}</span>
+                        <a href="#" class="card-link"><i class="fa-solid fa-cart-arrow-down"></i></a>
+                    </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
     }
 
     return products;
@@ -114,11 +139,12 @@ const mostrarPaginacion = (count) => {
     pages = `
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
+        <li class="page-item"><button onClick="seleccionarPagina(0)" class="page-link">1</button></li>
     `;
     
     for(let i = 0; i < count_pages; i++) {
         pages += `
-        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`})" class="page-link">${(i+1)}</button></li>
+        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`})" class="page-link">${(i+2)}</button></li>
         `;
     }
 
@@ -130,7 +156,7 @@ const mostrarPaginacion = (count) => {
 }
 
 const seleccionarPagina = async (page) => {
-    await fetch(`http://localhost:3000/api/product/?page=${page}`)
+    await fetch(`https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product/?page=${page}`)
         .then(response => response.json())
         .then(data => {
             console.log(data)
@@ -141,4 +167,8 @@ const seleccionarPagina = async (page) => {
             console.log(err);
             alert("Lo sentimos!!! No se pudieron cargar los productos");
         });
+}
+
+const limpiarPaginacion = () => {
+    document.getElementById('paginas').innerHTML = '';
 }

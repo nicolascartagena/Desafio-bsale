@@ -57,12 +57,13 @@ header.offcanvas .offcanvas-body hr {
 
 main {
     background-color: #fbfbfd;
-    padding: 0 15px;  
+    padding: 0 15px;
+    padding-bottom: 5px;
 }
 
 main .content {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    padding-bottom: 15px;
+    padding-top: 15px;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -85,5 +86,9 @@ main .content .card .card-footer a:hover {
 }
 
 footer {
+    margin-top: 15px;
+}
+
+.separar {
     margin-top: 15px;
 }
