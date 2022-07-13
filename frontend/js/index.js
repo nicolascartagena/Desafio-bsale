@@ -5,25 +5,15 @@ document.addEventListener('DOMContentLoaded', function() {
     // Función para cargar los productos url: /api/product
     cargarProductos();
 
-    document.getElementById('buscador').addEventListener("input", buscadorProducto);
+    document.getElementById('btnBuscar').addEventListener("click", buscadorProducto);
 });
 
 const cargarProductos = async () => {
-    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product')
-        .then(response => response.json())
-        .then(data => {
-            limpiarPaginacion();
-            document.getElementById('productos').innerHTML = mostrarProductos(data);
-            mostrarPaginacion(data.results.count)
-        })
-        .catch(err => {
-            console.log(err);
-            alert("Lo sentimos!!! No se pudieron cargar los productos");
-        });
+    paginaSinFiltro();
 }
 
 const cargarCartegorias = async () => {
-    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/category')
+    await fetch('http://localhost:3000/api/category')
         .then(response => response.json())
         .then(data =>{
             let categoria = '';
@@ -44,13 +34,14 @@ const cargarCartegorias = async () => {
 }
 
 const buscadorProducto = async (e) => {
-
+    e.preventDefault();
+    const product = document.getElementById('buscador').value;
+    
     const payload = {
-        name: e.target.value
+        name: product
     };
-
-
-    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product', {
+    
+    await fetch('http://localhost:3000/api/product', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
@@ -59,6 +50,7 @@ const buscadorProducto = async (e) => {
         .then(data => {
             limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count, product);
         })
         .catch(err => {
             console.log(err);
@@ -70,7 +62,7 @@ const filtrarProductos = async (id) => {
         category: id
     };
 
-    await fetch('https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product/filter', {
+    await fetch('http://localhost:3000/api/product/filter', {
         method: 'POST',
         headers: {'Content-Type': 'application/json'},
         body: JSON.stringify(payload)
@@ -87,7 +79,6 @@ const filtrarProductos = async (id) => {
 
 const mostrarProductos = (data) => {
     let products = '';
-    console.log(data)
     if(data.results.rows) {
         for(let item of data.results.rows) {
             products += `
@@ -134,7 +125,7 @@ const mostrarProductos = (data) => {
     return products;
 }
 
-const mostrarPaginacion = (count) => {
+const mostrarPaginacion = (count, filtro='') => {
     const count_pages = Math.floor(count / 12);
     pages = `
     <nav aria-label="Page navigation example">
@@ -144,7 +135,7 @@ const mostrarPaginacion = (count) => {
     
     for(let i = 0; i < count_pages; i++) {
         pages += `
-        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`})" class="page-link">${(i+2)}</button></li>
+        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`}, '${filtro}')" class="page-link">${(i+2)}</button></li>
         `;
     }
 
@@ -155,13 +146,45 @@ const mostrarPaginacion = (count) => {
     document.getElementById('paginas').innerHTML = pages;
 }
 
-const seleccionarPagina = async (page) => {
-    await fetch(`https://desafio-bsale-backend-nicolasc.herokuapp.com/api/product/?page=${page}`)
+const seleccionarPagina = async (page, condicion = undefined) => {
+    if(condicion === undefined) {
+        paginaSinFiltro(page);
+    }
+    else {
+        paginaConFiltro(page, condicion)
+    }
+}
+
+const paginaSinFiltro = async (page=0) => {
+    await fetch(`http://localhost:3000/api/product/?page=${page}`)
+        .then(response => response.json())
+        .then(data => {
+            document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count)
+        })
+        .catch(err => {
+            console.log(err);
+            alert("Lo sentimos!!! No se pudieron cargar los productos");
+        });
+}
+
+const paginaConFiltro = async (page=0, product) => {
+
+    const payload = {
+        name: product,
+        page
+    };
+
+    fetch('http://localhost:3000/api/product', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+        })
         .then(response => response.json())
         .then(data => {
             console.log(data)
             document.getElementById('productos').innerHTML = mostrarProductos(data);
-            mostrarPaginacion(data.results.count)
+            mostrarPaginacion(data.results.count, product);
         })
         .catch(err => {
             console.log(err);

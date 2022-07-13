@@ -32,15 +32,23 @@ Product.belongsTo(Category,{
     as: 'Category'
 });
 
+// Función para retornar los datos de la base de datos con la paginación
 Product.findAllData = function (limit, offset) {    
     return Product.findAndCountAll({
         limit: limit,
         offset: offset,
-        include:'Category'})
+        include:'Category'
+    });
 };
 
-Product.findAllCondition = function (condition) {
-    return Product.findAll({ include: 'Category', where: condition })
+// Función para retornar los datos, pero con una condición.
+Product.findAllCondition = function (condition, limit, offset) {
+    return Product.findAndCountAll({ 
+        include: 'Category', 
+        where: condition,
+        limit: limit,
+        offset: offset
+    });
 }
 
 module.exports = Product;

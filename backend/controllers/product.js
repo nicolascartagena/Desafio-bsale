@@ -1,7 +1,13 @@
 const Product = require('../models/product');
 const { handleHttpError } = require('../utils/handleError');
 const { Op } = require('sequelize');
+const { getPage } = require('../utils/helperDatabase');
 
+/**
+ * Función que obtiene todos los productos de la base de datos
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getItems = async (req, res) => {
     try {
         const page = req.query.page;
@@ -16,23 +22,22 @@ const getItems = async (req, res) => {
     }
 }
 
-const getPage = (page, size) => {
-    const limit = size ? +size : 3;
-    const offset = page ? page * limit : 0;
-    return {limit,offset}
-}
-
+/**
+ * Función que obtiene los productos de la base de datos que tengan coincidencia con el nombre enviado.
+ * @param {*} req 
+ * @param {*} res 
+ */
 const getItem = async (req, res) => {
     try{
-        const name = req.body.name;
-
+        const {page, name} = req.body;
+        const {limit, offset} = getPage(page, 12);
         const condition = {
             name: {
                 [Op.like]: `%${name}%`
             }
         }
 
-        const results = await Product.findAllCondition(condition);
+        const results = await Product.findAllCondition(condition, limit, offset);
 
         res.json({
             results
@@ -43,15 +48,20 @@ const getItem = async (req, res) => {
     }
 }
 
+/**
+ * Función que obtiene los productos de la base de datos, dependiendo del filtro aplicado
+ * @param {*} req 
+ * @param {*} res 
+ */
 const filterItems = async (req, res) => {
     try {
-        const category = req.body.category;
-
+        const {page, category} = req.body;
+        const {limit, offset} = getPage(page, 12);
         const condition = {
             category: category
         }
 
-        const results = await Product.findAllCondition(condition);
+        const results = await Product.findAllCondition(condition, limit, offset);
 
         res.json({
             results
@@ -61,6 +71,8 @@ const filterItems = async (req, res) => {
         handleHttpError(res, e, 500);
     }
 }
+
+
 
 module.exports = {
     getItems,
