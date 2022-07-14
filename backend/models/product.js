@@ -1,3 +1,4 @@
+// importación de modulos y librerias requeridas
 const { sequelize } = require('../config/mysql');
 const { DataTypes } = require("sequelize");
 const Category = require('./category');
@@ -22,7 +23,9 @@ const Product = sequelize.define('product',{
     }
 },
 {
+    // restringir el nombre en plural
     freezeTableName: true,
+    // impedir que agregue o solicite dos columnas de tiempo a la tabla
     timestamps: false
 });
 

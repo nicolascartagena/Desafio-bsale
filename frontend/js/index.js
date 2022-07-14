@@ -3,15 +3,12 @@ document.addEventListener('DOMContentLoaded', function() {
     cargarCartegorias();
 
     // Función para cargar los productos url: /api/product
-    cargarProductos();
+    paginaSinFiltro();
 
     document.getElementById('btnBuscar').addEventListener("click", buscadorProducto);
 });
 
-const cargarProductos = async () => {
-    paginaSinFiltro();
-}
-
+// funcion para obtener las categorias mediante un request al backend
 const cargarCartegorias = async () => {
     await fetch('http://localhost:3000/api/category')
         .then(response => response.json())
@@ -28,11 +25,11 @@ const cargarCartegorias = async () => {
             
         })
         .catch(err => {
-            console.log(err);
             alert("Lo sentimos!!!, Algo sucedio y no se pudo cargar las categorias.");
         });
 }
 
+// funcion que realiza un request al backend para obtener los productos por nombre
 const buscadorProducto = async (e) => {
     e.preventDefault();
     const product = document.getElementById('buscador').value;
@@ -50,13 +47,15 @@ const buscadorProducto = async (e) => {
         .then(data => {
             limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
-            mostrarPaginacion(data.results.count, product);
+            mostrarPaginacion(data.results.count, filtro=product);
+            validarDatos(data);
         })
         .catch(err => {
-            console.log(err);
+            alert("Lo sentimos, ocurrio un error");
         });
 }
 
+// funcion que realiza un request al backend para obtener los productos por categoria
 const filtrarProductos = async (id) => {
     const payload = {
         category: id
@@ -71,12 +70,15 @@ const filtrarProductos = async (id) => {
         .then(data => {
             limpiarPaginacion();
             document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count, '', id);
+            validarDatos(data);
         })
         .catch(err => {
-            console.log(err);
+            alert("Lo sentimos, ocurrio un error");
         });
 }
 
+// funcion que recibe la data de los request y la muestra en la pagina
 const mostrarProductos = (data) => {
     let products = '';
     if(data.results.rows) {
@@ -125,17 +127,18 @@ const mostrarProductos = (data) => {
     return products;
 }
 
-const mostrarPaginacion = (count, filtro='') => {
+// funcion para mostrar las paginas disponibles
+const mostrarPaginacion = (count, filtro='', categoria = '') => {
     const count_pages = Math.floor(count / 12);
     pages = `
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
-        <li class="page-item"><button onClick="seleccionarPagina(0)" class="page-link">1</button></li>
+        <li class="page-item"><button onClick="seleccionarPagina(0, '${filtro}', '${categoria}')" class="page-link">1</button></li>
     `;
     
     for(let i = 0; i < count_pages; i++) {
         pages += `
-        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`}, '${filtro}')" class="page-link">${(i+2)}</button></li>
+        <li class="page-item"><button onClick="seleccionarPagina(${`${(i+1)}`}, '${filtro}', '${categoria}')" class="page-link">${(i+2)}</button></li>
         `;
     }
 
@@ -146,28 +149,34 @@ const mostrarPaginacion = (count, filtro='') => {
     document.getElementById('paginas').innerHTML = pages;
 }
 
-const seleccionarPagina = async (page, condicion = undefined) => {
-    if(condicion === undefined) {
+// funcion que llama a otra funcion dependiendo de lo que se selecciono
+const seleccionarPagina = async (page, condicion, categoria) => {
+    if(condicion === '' && categoria === '') {
         paginaSinFiltro(page);
     }
-    else {
-        paginaConFiltro(page, condicion)
+    else if(condicion !== '') {
+        paginaConFiltro(page, condicion);
+    }
+    else if(categoria !== '') {
+        paginaCategoria(page, categoria);
     }
 }
 
+// funcion que realiza un request al backend para obtener los productos
 const paginaSinFiltro = async (page=0) => {
     await fetch(`http://localhost:3000/api/product/?page=${page}`)
         .then(response => response.json())
         .then(data => {
             document.getElementById('productos').innerHTML = mostrarProductos(data);
             mostrarPaginacion(data.results.count)
+            validarDatos(data);
         })
         .catch(err => {
-            console.log(err);
             alert("Lo sentimos!!! No se pudieron cargar los productos");
         });
 }
 
+// funcion que realiza un request al backend para obtener los productos por nombre
 const paginaConFiltro = async (page=0, product) => {
 
     const payload = {
@@ -182,16 +191,45 @@ const paginaConFiltro = async (page=0, product) => {
         })
         .then(response => response.json())
         .then(data => {
-            console.log(data)
             document.getElementById('productos').innerHTML = mostrarProductos(data);
+
             mostrarPaginacion(data.results.count, product);
         })
         .catch(err => {
-            console.log(err);
             alert("Lo sentimos!!! No se pudieron cargar los productos");
+        });
+}
+
+// funcion que realiza un request al backend para obtener los productos por categoria
+const paginaCategoria = async (page, id) => {
+    const payload = {
+        category: id,
+        page
+    };
+
+    await fetch('http://localhost:3000/api/product/filter', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(payload)
+        })
+        .then(response => response.json())
+        .then(data => {
+            limpiarPaginacion();
+            document.getElementById('productos').innerHTML = mostrarProductos(data);
+            mostrarPaginacion(data.results.count, '', id);
+        })
+        .catch(err => {
+            alert("Lo sentimos, ocurrio un error");
         });
 }
 
 const limpiarPaginacion = () => {
     document.getElementById('paginas').innerHTML = '';
+}
+
+const validarDatos = (data) => {
+    if (data.results.rows.length === 0) {
+        document.getElementById('productos').innerHTML = `<p>Lo sentimos, en este minuto no hay productos para mostrar</p>`;
+        document.getElementById('paginas').innerHTML = '';
+    }
 }

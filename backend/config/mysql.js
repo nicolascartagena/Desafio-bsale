@@ -1,3 +1,4 @@
+// importacion de la libreria sequelize
 const { Sequelize } = require('sequelize');
 
 // Constantes para la conexion
@@ -6,6 +7,7 @@ const username = process.env.DATABASE_USER;
 const password = process.env.DATABASE_PASSWORD;
 const database = process.env.DATABASE_NAME;
 
+// instancia de sequelize con los datos de conexion
 const sequelize = new Sequelize(
     database,
     username,
@@ -16,8 +18,12 @@ const sequelize = new Sequelize(
     }
 );
 
+/**
+ * funcion para la conexion a la base de datos
+ */
 const conexionDB = async () => {
     try {
+        // conexion a la base de datos
         await sequelize.authenticate();
         console.log("Conexión Establecida");
     } catch(e) {

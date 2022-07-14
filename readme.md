@@ -230,6 +230,28 @@ Respuesta
 ```
 
 ### Deploy
+#### Backend
+Asegurece de tener Node.js (>=v16.14.0) instalado.
+```
+git clone https://github.com/nicolascartagena/Desafio-bsale.git
+cd Desafio-bsale/backend
+npm install
+```
+Al tener los modulos necesarios definidos en el package.json, solo resta correr el servidor con el siguiente comando:
+```
+npm start
+```
+o si lo prefiere:
+```
+node app.js
+```
+Debe asegurarse siempre de estar en el directorio backend.
+#### Frontend
+Para el deploy del frontend, debe realizar los siguientes pasos:
+- Cargar el frontend de la aplicacion en un equipo (computador personal o servidor).
+- Asegurarse que los links a los cuales apuntan los fetch, sean correspondiente a donde se encuentra ejecutando el backend.
+
+#### Deploy de la aplicación para el desafío
 Para realizar el deploy de la aplicación, se utilizó Heroku en el backend, el link es:
 -   https://desafio-bsale-backend-nicolasc.herokuapp.com/
 como observacion, si clickea ese link, mostrara un error, esto es debido a que los links habilitados son /api/product o /api/category

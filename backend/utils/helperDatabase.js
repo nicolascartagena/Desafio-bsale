@@ -10,6 +10,20 @@
     return {limit,offset}
 }
 
+/**
+ * Función que eliminar del array las filas que tengan un url_image sin un path
+ * @param {array} productsDB 
+ * @param {int} count 
+ * @returns 
+ */
+const missingData = (productsDB, count) => {
+    const products = productsDB.filter((product) => {
+        return product.url_image !== "" && product.url_image !== null
+    });
+    return {products, count}
+}
+
 module.exports = {
-    getPage
+    getPage,
+    missingData
 }
